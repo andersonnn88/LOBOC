@@ -1,0 +1,56 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. CBONREAD.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT ARQSAI ASSIGN TO UT-S-ARQSAI
+           FILE STATUS IS WK-FS-ARQSAI.
+       DATA DIVISION.
+       FILE SECTION.
+       FD ARQSAI
+           RECORDING MODE IS F
+           LABEL RECORD IS STANDARD
+           BLOCK CONTAINS 0 RECORDS.
+
+       01  FD-ARQSAI.
+           05 FD-ID             PIC 9(20).
+      *     05 FD-NAME          PIC X(10).
+       WORKING-STORAGE SECTION.
+       77  WK-FS-ARQSAI        PIC X(02) VALUE SPACES.
+       77  WRK-LER             PIC X(10) VALUE SPACES.
+       77  TOT                 PIC 9(02) VALUE 10.
+
+       PROCEDURE DIVISION.
+       0000-PRINCIPAL          SECTION.
+               PERFORM 0100-INICIAR.
+               PERFORM 0200-PROCESSAR.
+      *         UNTIL WRK-LER  EQUAL '10'
+
+               PERFORM 0300-FINALIZAR.
+       0000-99-FIM.            EXIT.
+       0100-INICIAR            SECTION.
+                   OPEN OUTPUT ARQSAI
+
+                   .
+       0100-99-FIM.            EXIT.
+       0200-PROCESSAR          SECTION.
+
+            PERFORM  UNTIL  0  >= TOT
+                SUBTRACT 1 FROM  TOT
+                MOVE TOT  TO FD-ID
+                WRITE FD-ARQSAI
+
+            END-PERFORM
+
+               .
+       0200-99-FIM.            EXIT.
+       0300-FINALIZAR          SECTION.
+               CLOSE ARQSAI
+              STOP RUN.
+       0300-99-FIN.            EXIT.
+
+
+ 
